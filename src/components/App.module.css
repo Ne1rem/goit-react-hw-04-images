@@ -1,0 +1,13 @@
+.App {
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-gap: 16px;
+    padding-bottom: 24px;
+    margin: 0 auto;
+}
+
+.error {
+    text-align: center;
+    color: red;
+    font-size: 32px;
+}
