@@ -1,50 +1,43 @@
-import React, { Component } from 'react';
+import React, { useEffect } from 'react';
 import styles from '../ModalWindow/ModalWindow.module.css';
 import PropTypes from 'prop-types';
 
 const body = document.querySelector('body');
 
-export default class ModalWindow extends Component {
-  state = {
-    loading: false,
-  };
+export default function ModalWindow({ src, alt, onClose }) {
+  useEffect(() => {
+    const handleCloseModal = event => {
+      if (event.code === 'Escape') {
+        onClose();
+      }
+    };
 
-  componentDidMount() {
-    window.addEventListener('keydown', this.handleCloseModal);
+    const backDropClick = event => {
+      if (event.currentTarget === event.target) {
+        onClose();
+      }
+    };
+
+    window.addEventListener('keydown', handleCloseModal);
     body.classList.add('no-scroll');
-  };
 
-  componentWillUnmount() {
-    window.removeEventListener('keydown', this.handleCloseModal);
-    body.classList.remove('no-scroll');
-  };
+    return () => {
+      window.removeEventListener('keydown', handleCloseModal);
+      body.classList.remove('no-scroll');
+    };
+  }, [onClose]);
 
-  handleCloseModal = event => {
-    if (event.code === 'Escape') {
-      this.props.onClose();
-    }
-  };
-
-  backDropClick = event => {
-    if (event.currentTarget === event.target) {
-      this.props.onClose();
-    }
-  };
-
-  render() {
-    const { src, alt } = this.props;
-    return (
-      <div className={styles.backdrop} onClick={this.backDropClick}>
-        <div className={styles.modalOpen}>
-          <img className={styles.modalImg} src={src} alt={alt} />
-        </div>
+  return (
+    <div className={styles.backdrop} onClick={this.backDropClick}>
+      <div className={styles.modalOpen}>
+        <img className={styles.modalImg} src={src} alt={alt} />
       </div>
-    );
-  }
-};
+    </div>
+  );
+}
 
 ModalWindow.propTypes = {
   alt: PropTypes.string.isRequired,
   src: PropTypes.string.isRequired,
   onClose: PropTypes.func.isRequired,
-}
+};
